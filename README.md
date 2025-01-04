@@ -94,6 +94,29 @@ Recommend `set termguicolors`
 
 You should setup highlights before this extension activated.
 
+## Autocmd
+
+`User CocSymbolLineUpdate` executed after variables have been updated 
+
+<details>
+<summary>Example of use</summary>
+
+```lua
+vim.api.nvim_create_autocmd({ "User" }, {
+    pattern = 'CocSymbolLineUpdate',
+    callback = function ()
+        local bufnr = vim.api.nvim_win_get_buf(vim.g.statusline_winid or 0)
+        local ok, line = pcall(vim.api.nvim_buf_get_var, bufnr, 'coc_symbol_line')
+        if ok and line ~= nil then
+            if vim.bo.buftype == '' then
+                vim.api.nvim_set_option_value('winbar', '%#CocSymbolLine#' .. line, { scope = 'local' })
+            end
+        end
+    end,
+})
+```
+</details>
+
 ---
 
 Most of code is copied from coc.nvim :)
